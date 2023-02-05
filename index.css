@@ -6,7 +6,6 @@ body {
 
 .container {
     width: 600px;
-    height: 100vh;
     margin: 0 auto;
     background-color: #ffffff;
 }
@@ -70,4 +69,76 @@ body {
     display: flex;
     flex-direction: flex-start;
     width: 10%;
+}
+
+.order-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.order-title {
+    font-size: 30px;
+}
+
+.order-item-section {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.order-item {
+    display: flex;
+}
+
+.order-name {
+    margin-right: 10px;
+    font-size: 30px;
+}
+
+.order-price {
+    font-size: 25px;
+}
+
+.remove-btn {
+    display: flex;
+    align-items: center;
+    color: rgba(73, 65, 65, 0.432);
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.total-price-section {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    border-top: 2px solid #070D0D;
+    padding-top: 20px;
+}
+
+.total-price-title {
+    font-size: 30px;
+}
+
+.total-price-amount {
+    font-size: 25px;
+}
+
+.complete-order-btn {
+    width: 100%;
+    height: 60px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    background: #16DB99;
+    border: none;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.hidden {
+    display: none;
 }
