@@ -5,6 +5,7 @@ const orderEl = document.getElementById("order");
 const orderTitleEl = document.getElementById("order-title");
 const totalPriceEl = document.getElementById("total-price");
 const completeOrderBtn = document.getElementById("complete-order-btn");
+const closeBtn = document.getElementById("close")
 let orderArray = [];
 let totalPrice = [];
 
@@ -16,13 +17,22 @@ let totalPrice = [];
 
 // when you click on the plus sign, an item needs to be added to the order summary
 // it should then show the total and display the complete order button
+// when you click on 'remove', the function checks the target element to see if
+// it has that dataset. If it does, then it assigns it to a variable.
 
 document.addEventListener("click", function (e) {
   if (e.target.dataset.added) {
     handleAddItemClick(menuArray[e.target.dataset.added]);
+  } else if (e.target.dataset.remove) {
+    let removedItem = e.target.dataset.remove;
+    console.log(removedItem);
+    let indexOfItem = orderArray.findIndex((item) => item.id == removedItem);
+    console.log(indexOfItem);
+    orderArray.splice(indexOfItem, 1);
+    totalPrice.splice(indexOfItem, 1);
   }
   renderOrderSummary();
-  priceTotal()
+  priceTotal();
 });
 
 // function to push an individual item that has it's corresponding
@@ -52,8 +62,7 @@ function renderMenu() {
             </div>
             <img 
             src="images/plus-circle.svg" id="plus-circle" class="plus-circle" 
-            alt="add item symbol" data-added="${value.id}"
-            >
+            alt="add item symbol" data-added="${value.id}">
         </div>
         `;
   }
@@ -70,7 +79,7 @@ function renderOrderSummary() {
             <div id="order-item-section" class="order-item-section">
                 <div class="order-item">
                     <div class="order-name">${item.name}</div>
-                    <div class="remove-btn">remove</div>
+                    <div class="remove-btn" data-remove="${item.id}">remove</div>
                 </div>
                 <div class="order-price">$${item.price}</div>
             </div>
@@ -80,15 +89,27 @@ function renderOrderSummary() {
 }
 
 function priceTotal() {
-    let priceString = "";
-    let total = totalPrice.reduce((a, b) => a + b, 0);
-    priceString = `
+  let priceString = "";
+  let total = totalPrice.reduce((a, b) => a + b, 0);
+  priceString = `
     <div class="total-price-section">
           <div class="total-price-title">Total Price:</div>
           <div class="total-price-amount">$${total}</div>
     </div>
-    `
-    totalPriceEl.innerHTML = priceString
+    `;
+  totalPriceEl.innerHTML = priceString;
 }
 
 renderMenu();
+
+function completeOrder() {
+  document.getElementById("complete-order").classList.remove('hidden')
+}
+
+completeOrderBtn.addEventListener("click", completeOrder);
+
+function closeCardDetails() {
+  document.getElementById('complete-order').classList.add('hidden')
+}
+
+closeBtn.addEventListener('click', closeCardDetails)
