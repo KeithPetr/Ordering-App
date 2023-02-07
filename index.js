@@ -8,49 +8,45 @@ const orderTitleEl = document.getElementById("order-title");
 const totalPriceEl = document.getElementById("total-price");
 const completeOrderBtn = document.getElementById("complete-order-btn");
 const closeBtn = document.getElementById("close");
-const creditCardForm = document.getElementById("credit-card-form")
+const creditCardForm = document.getElementById("credit-card-form");
 let orderArray = [];
-let totalPrice = [];
 
-// the below variable changes to false when the 'complete order' button is
-// clicked so that items can't be added or removed when the card details
-// are being entered. It switches back to true when the 'X' is clicked to
-// close the card details so that the order can be updated
-
-let enabled = true; 
-
-
-
-// when you click on the plus sign, the handleAddItemClick function runs. the 
+// when you click on the plus sign, the handleAddItemClick function runs. the
 // parameter for the function is the object associated with the value from the
-// 'added' dataset. when you click on 'remove', the 'else if' section 
+// 'added' dataset. when you click on 'remove', the 'else if' section
 // checks the target element to see if it has the 'remove' dataset. If it does,
-// then it assigns it to a variable. this variable is used to compare to the 
+// then it assigns it to a variable. this variable is used to compare to the
 // item.id of each menu item in the orderArray using .findIndex. if there is
 // a match, that item and it's price are removed from the arrays.
 
 document.addEventListener("click", function (e) {
   if (e.target.dataset.added) {
-    handleAddItemClick(menuArray[e.target.dataset.added]);
-  } else if (enabled === true && e.target.dataset.remove) {
-    let removedItem = e.target.dataset.remove;
-    let indexOfItem = orderArray.findIndex((item) => item.id == removedItem);
-    orderArray.splice(indexOfItem, 1);
-    totalPrice.splice(indexOfItem, 1);
+    addItem(menuArray[e.target.dataset.added]);
+    renderOrderSummary();
+    priceTotal();
+  } else if (e.target.dataset.remove) {
+    e.target.parentNode.parentNode.remove();
+    removeItem(e.target);
+    priceTotal();
   }
-  renderOrderSummary();
-  priceTotal();
 });
 
-// The below function pushes an individual menu item to the orderArray 
+// the below function filters over the targets of the remove button and checks
+// it against the item.id to make sure the correct item is being removed
+function removeItem(target) {
+  let removedItem = target.dataset.remove;
+  let indexOfItem = orderArray.findIndex((item) => item.id === removedItem);
+  // the below filter returns all of the items in the order array that do not
+  // meet the criteria of the item in the variable 'indexOfItem'
+  orderArray = orderArray.filter((item, index) => item.id !== removedItem && index !== indexOfItem);
+}
+
+// The below function pushes an individual menu item to the orderArray
 // that has it's corresponding plus sign clicked on. It also pushes that
 // corresponding menu item's price to the totalPrice array
 
-function handleAddItemClick(item) {
-  if (enabled === true) {
-    orderArray.push(item);
-    totalPrice.push(item.price);
-  }
+function addItem(item) {
+    orderArray.push(item)
 }
 
 // below is the render function that iterates through each object in the menu array
@@ -86,7 +82,7 @@ renderMenu();
 
 // The below function allows for the order summary at the bottom of the app
 // to display once the plus sign has been clicked. It also removes the hidden
-// class from the entire order element, the 'Your Order' p tag, and the 
+// class from the entire order element, the 'Your Order' p tag, and the
 // 'Complete Order' green button so that they become visible.
 
 function renderOrderSummary() {
@@ -113,7 +109,8 @@ function renderOrderSummary() {
 
 function priceTotal() {
   let priceString = "";
-  let total = totalPrice.reduce((a, b) => a + b, 0);
+  let prices = orderArray.map((item) => item.price);
+  let total = prices.reduce((a, b) => a + b, 0);
   priceString = `
     <div class="total-price-section">
           <div class="total-price-title">Total Price:</div>
@@ -130,13 +127,7 @@ function priceTotal() {
 
 function completeOrder() {
   if (orderArray.length >= 1) {
-    enabled = false;
     document.getElementById("complete-order").classList.remove("hidden");
-    document.getElementById("menu").classList.add('opacity')
-    document.getElementById("order").classList.add('opacity')
-    document.getElementById("total-price").classList.add('opacity')
-    document.getElementById("complete-order-btn").classList.add('opacity')
-    document.getElementById("order-title").classList.add('opacity')
   }
 }
 
@@ -148,13 +139,7 @@ completeOrderBtn.addEventListener("click", completeOrder);
 // class.
 
 function closeCardDetails() {
-  enabled = true;
   document.getElementById("complete-order").classList.add("hidden");
-  document.getElementById("menu").classList.remove('opacity')
-  document.getElementById("order").classList.remove('opacity')
-  document.getElementById("total-price").classList.remove('opacity')
-  document.getElementById("complete-order-btn").classList.remove('opacity')
-  document.getElementById("order-title").classList.remove('opacity')
 }
 
 closeBtn.addEventListener("click", closeCardDetails);
@@ -165,26 +150,20 @@ closeBtn.addEventListener("click", closeCardDetails);
 
 creditCardForm.addEventListener("submit", function (e) {
   e.preventDefault();
-  document.getElementById('complete-order').classList.add('hidden')
-  completeOrderBtn.classList.add("hidden")
-  orderTitleEl.innerHTML = ''
-  totalPriceEl.innerHTML = ''
+  document.getElementById("complete-order").classList.add("hidden");
+  completeOrderBtn.classList.add("hidden");
+  orderTitleEl.innerHTML = "";
+  totalPriceEl.innerHTML = "";
   orderEl.innerHTML = `
     <div id="delivery-status" class="delivery-status">
       <p id="delivery-message" class="delivery-message">
       Thanks ${document.getElementById("name").value}! Your food is on it's way!
       </p>
+      <p class="another-order">Add another item to begin another order!</p>
     </div>
   `;
+  creditCardForm.reset();
+  orderArray = [];
 });
 
-// the below function removes the opacity class when the 'pay' button is
-// clicked
 
-document.getElementById('pay-btn').addEventListener('click', function() {
-  document.getElementById("menu").classList.remove('opacity')
-  document.getElementById("order").classList.remove('opacity')
-  document.getElementById("total-price").classList.remove('opacity')
-  document.getElementById("complete-order-btn").classList.remove('opacity')
-  document.getElementById("order-title").classList.remove('opacity')
-})
