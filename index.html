@@ -12,32 +12,58 @@
   </head>
 
   <body>
-    <div class="container">
-      <div class="top-img">
+    <div id="container" class="container">
+      <div class="top-section">
+        <h1 class="restaurant-name">Keith's Diner</h1>
+        <p class="restaurant-description">It's okay I guess.</p>
         <img
           src="images/hamburger.jpg"
           class="header-img"
           alt="hamburger and french fries"
         />
       </div>
-      <div class="menu" id="menu"></div>
+      <div class="menu" id="menu"></div> <!-- this div renders the menu items -->
       <p class="order-title hidden" id="order-title">Your Order</p>
-      <div class="order" id="order"></div>
-      <div class="total-price" id="total-price"></div>
-      <div class="complete-order hidden" id="complete-order">
+      <div class="order" id="order"></div> <!-- this div renders all the items that have been selected for order-->
+      <div class="total-price" id="total-price"></div> <!-- this div renders the total price -->
+      <div class="complete-order hidden" id="complete-order"> <!-- this div renders the modal for the card details -->
         <div id="complete-order-container" class="complete-order-container">
           <button id="close" class="close">X</button>
           <div class="complete-order-information">
             <p class="enter-card-details">Enter Card Details</p>
-            <input class="name" type='text' placeholder="enter full name" required>
-            <input class="card-number" type="number" placeholder="enter card number" required>
-            <input class="cvv" type="number" placeholder="enter cvv" required>
-            <button class="pay">Pay</button>
+            <form id="credit-card-form">
+              <input
+                id="name"
+                class="name"
+                type="text"
+                placeholder="enter full name"
+                required
+              />
+              <input
+                class="card-number"
+                type="text"
+                placeholder="enter card number"
+                minlength="12"
+                maxlength="16"
+                required
+              />
+              <input
+                class="cvv"
+                type="text"
+                placeholder="enter cvv"
+                minlength="3"
+                maxlength="3"
+                required
+              />
+              <button type="submit" id="pay-btn" class="pay-btn">Pay</button>
+            </form>
           </div>
         </div>
       </div>
-      <div class="delivery" id="delivery"></div>
-      <button class="complete-order-btn hidden" id="complete-order-btn">Complete Order</button>
+      <div class="delivery" id="delivery"></div> <!-- this div renders the delivery status message -->
+      <button class="complete-order-btn hidden" id="complete-order-btn">
+        Complete Order
+      </button>
     </div>
   </body>
   <script src="index.js" type="module"></script>
