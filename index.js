@@ -35,10 +35,11 @@ document.addEventListener("click", function (e) {
 // it against the item.id to make sure the correct item is being removed
 function removeItem(target) {
   let removedItem = target.dataset.remove;
-  let indexOfItem = orderArray.findIndex((item) => item.id === removedItem);
+  let indexOfItem = orderArray.findIndex((item) => item.id === +removedItem);
   // the below filter returns all of the items in the order array that do not
   // meet the criteria of the item in the variable 'indexOfItem'
   orderArray = orderArray.filter((item, index) => item.id !== removedItem && index !== indexOfItem);
+  priceTotal();
 }
 
 // The below function pushes an individual menu item to the orderArray
@@ -109,8 +110,10 @@ function renderOrderSummary() {
 
 function priceTotal() {
   let priceString = "";
-  let prices = orderArray.map((item) => item.price);
-  let total = prices.reduce((a, b) => a + b, 0);
+  let total = 0;
+  for (let item of orderArray) {
+    total += item.price;
+  }
   priceString = `
     <div class="total-price-section">
           <div class="total-price-title">Total Price:</div>
